@@ -17,63 +17,77 @@ The CreditCard class abstracts away the details of spending tracking. It encapsu
 
 Both the CreditCard and EmailComposer classes encapsulate their respective functionalities. They hide the internal details and provide well-defined interfaces for interacting with their objects.
 
-## Code Implementation
+# Object-Oriented Modeling and Design (OOMD)
 
-```java
-/**
- * Credit Card Class - Represents a user's credit card and spending information.
- */
-class CreditCard {
-    // Assume necessary properties and methods for tracking spending.
-}
+## Classes:
 
-/**
- * EmailComposer Class - Handles composing email messages for unusual spending alerts.
- */
-class EmailComposer {
-    /**
-     * Compose an email message for unusual spending.
-     *
-     * @param userName User's name.
-     * @param unusualSpending Map of categories and their spending amounts.
-     * @return Composed email message.
-     */
-    public String composeEmail(String userName, Map<String, Double> unusualSpending) {
-        StringBuilder message = new StringBuilder();
-        message.append("# Unusual Spending Alert\n\n");
-        message.append("Unusual spending of ₹").append(calculateTotal(unusualSpending)).append(" detected!\n\n");
-        message.append("Hello ").append(userName).append("!\n\n");
-        message.append("We have detected unusually high spending on your card in these categories:\n");
+### 1. CreditCard
+   - Properties:
+     - `cardNumber: string`
+     - `owner: User`
 
-        for (Map.Entry<String, Double> entry : unusualSpending.entrySet()) {
-            message.append("* You spent ₹").append(entry.getValue()).append(" on ").append(entry.getKey()).append("\n");
-        }
+### 2. User
+   - Properties:
+     - `name: string`
+     - `emailId: string`
+     - `transactions: List[Transaction]`
 
-        message.append("\nThanks,\nThe Credit Card Company");
-        return message.toString();
-    }
+### 3. Transaction
+   - Properties:
+     - `amount: float`
+     - `category: Category`
+     - `timestamp: DateTime`
 
-    // Assume a method to calculate the total spending amount from the Map.
-    private double calculateTotal(Map<String, Double> spendingMap) {
-        // Implementation details...
-    }
-}
+### 4. Category
+   - Properties:
+     - `name: string`
 
-/**
- * Main Class - Entry point for the program.
- */
-public class Main {
-    public static void main(String[] args) {
-        // Assume instantiation and usage of CreditCard class to get spending data.
-        CreditCard userCard = new CreditCard();
-        Map<String, Double> unusualSpending = userCard.detectUnusualSpending();
+### 5. Alert
+   - Properties:
+     - `user: User`
+     - `categoriesWithUnusualSpend: List[Category]`
+     - `totalUnusualSpend: float`
 
-        // Assume instantiation and usage of EmailComposer class to send email alerts.
-        EmailComposer emailComposer = new EmailComposer();
-        String emailMessage = emailComposer.composeEmail("Baburao", unusualSpending);
+## States and Methods:
 
-        // Print or send the email message.
-        System.out.println(emailMessage);
-    }
-}
+### CreditCard
+- **States:**
+  - `cardNumber`: The unique identifier for the credit card.
+  - `owner`: The user associated with the credit card.
+
+### User
+- **States:**
+  - `name`: The name of the user.
+  - `emailId`: The email address of the user.
+  - `transactions`: A list of transactions made by the user.
+
+- **Behaviour:**
+  - `filterCategoriesWithUnusualSpend(month: Month): List[Category]`
+    - Filters and returns the categories for which the user spent at least 50% more in the given month compared to the previous month.
+
+### Transaction
+- **States:**
+  - `amount`: The amount spent in the transaction.
+  - `category`: The category of the transaction.
+  - `timestamp`: The timestamp of the transaction.
+
+### Category
+- **States:**
+  - `name`: The name of the spending category.
+
+### Alert
+- **States:**
+  - `user`: The user for whom the alert is generated.
+  - `categoriesWithUnusualSpend`: The list of categories with unusually high spending.
+  - `totalUnusualSpend`: The total amount spent unusually.
+
+- **Behaviour:**
+  - `composeEmailMessage(): str`
+    - Composes and returns the email message listing the categories with unusually high spending.
+
+### MonthlySpendingAnalyzer
+- **Behaviour:**
+  - `compareMonthlySpending(user: User, currentMonth: Month, previousMonth: Month): Alert`
+    - Compares the total amount spent in each category between the current and previous months, generates an alert for unusually high spending, and returns it.
+
 
